@@ -44,11 +44,25 @@ while(toc(start_time) < 10.0)
     [br,bl, ~,~,~, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     bump = (bf==1 || br==1 || bl==1);
     
-    % move around randomly.
-    SetFwdVelRadiusRoomba(serPort, fs, inf);
     
+    SetFwdVelRadiusRoomba(serPort, fs, inf);
     %KEEP MOVING AROUND RANDOMLY, HOPE SHIT DON'T BREAK.
     while(bump == 0)
+%         while(toc(start_time) < 1.0)
+%         end
+        pause(0.5);
+        
+        % turn until we are pointing towards the goal
+        AngleSensorRoomba(serPort);
+        while(abs(pos(3)) > -pi/4)
+            disp(-pos(3)/4)
+            turnAngle(serPort, as, -pos(3)/4);
+            angle = AngleSensorRoomba(serPort);
+            disp(angle);
+            pos(3) = pos(3) + corrective*angle;
+        end
+        SetFwdVelRadiusRoomba(serPort,fs,inf);
+        
         % go for a little while
         pause(td);
         % poll the bumpers
