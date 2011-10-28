@@ -53,8 +53,8 @@ while(toc(start_time) < 10.0)
         pause(0.5);
         
         % turn until we are pointing towards the goal
-        AngleSensorRoomba(serPort);
-        while(abs(pos(3)) > -pi/4)
+        start_angle = AngleSensorRoomba(serPort);
+        while(abs(start_angle-pos(3)) < pi/4)
             disp(-pos(3)/4)
             turnAngle(serPort, as, -pos(3)/4);
             angle = AngleSensorRoomba(serPort);
