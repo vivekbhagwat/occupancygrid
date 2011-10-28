@@ -41,7 +41,7 @@ while(toc(start_time) < 10.0)
         pause(td);
         % poll the bumpers
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
-        bump = br == 1 || bl == 1 || bf == 1;
+        bump = (br == 1 || bl == 1 || bf == 1);
         % if picked up, kill
         if (wr == 1 || wl == 1 || wc == 1)
             SetFwdVelRadiusRoomba(serPort, 0, 0);
