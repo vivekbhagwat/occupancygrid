@@ -80,7 +80,7 @@ while(toc(start_time) < 10.0)
     pos = wall_follower(serPort, map, pos);
     start_time = tic;
     
-    %replace surrounded -1s with 1s
+    %replace completely surrounded -1s with 1s
     directions_filled = [0,0,0,0]; %up, down, left, right
     for i = 1:size(map,1)
         for j = 1:size(map,2)
