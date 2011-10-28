@@ -56,7 +56,7 @@ while(toc(start_time) < 10.0)
         start_angle = pos(3);%AngleSensorRoomba(serPort);
         while(abs(start_angle-pos(3)) < pi/8)
             disp(-pos(3)/4)
-            turnAngle(serPort, as, pi/4);
+            turnAngle(serPort, as, pi/8);
             angle = AngleSensorRoomba(serPort);
             disp(angle);
             pos(3) = pos(3) + corrective*angle;
@@ -140,5 +140,8 @@ while(toc(start_time) < 10.0)
     
     
     map = plot_grid(map, pos, bump);
+    
+    turnAngle(serPort,as,pi/8);
+    pos(3) = pos(3) + corrective*AngleSensorRoomba(serPort);
 end
 
