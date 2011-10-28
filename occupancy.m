@@ -34,9 +34,9 @@ rectangle('position', [-map_size/2,-map_size/2, map_size, map_size],...
           'edgecolor',[0.5,0.5,0.5],...
           'facecolor',[0.5,0.5,0.5]);
 
-start_time = tic;
+last_updated = tic;
 
-while(toc(start_time) < 10.0)
+while(toc(last_updated) < 10.0)
         DistanceSensorRoomba(serPort); % clear distance
     [br,bl, ~,~,~, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     bump = (bf==1 || br==1 || bl==1);
@@ -53,7 +53,7 @@ while(toc(start_time) < 10.0)
         start_angle = pos(3);%AngleSensorRoomba(serPort);
         while(abs(start_angle-pos(3)) < pi/8)
             disp(-pos(3)/4)
-            turnAngle(serPort, as, pi/4);
+            turnAngle(serPort, as, pi/8);
             angle = AngleSensorRoomba(serPort);
             disp(angle);
             pos(3) = pos(3) + corrective*angle;
@@ -75,7 +75,9 @@ while(toc(start_time) < 10.0)
         pos(1) = pos(1) + d*cos(pos(3));
         pos(2) = pos(2) + d*sin(pos(3));
         % draw current location
-        map = plot_grid(map, pos, bf, br, bl);
+        map = plot_grid(map, pos, bf, br, bl, last_updated);
+        last_updated = map(2);
+        map = map(1);
     end
         
     SetFwdVelRadiusRoomba(serPort, 0, inf);
@@ -86,56 +88,13 @@ while(toc(start_time) < 10.0)
     map = a(4);
     start_time = tic;
     
-    %replace completely surrounded -1s with 1s
-    directions_filled = [0,0,0,0]; %up, down, left, right
-    for i = 1:size(map,1)
-        for j = 1:size(map,2)
-            if(map(i,j) == -1)
-                
-                %check above
-                if(i > 1)
-                    if(map(i-1,j)==1)
-                        directions_filled(1) = 1;
-                    end
-                else
-                    directions_filled(1) = 1;
-                end
-                
-                %check below
-                if(i < size(map,1))
-                    if(map(i+1,j)==1)
-                        directions_filled(2) = 1;
-                    end
-                else
-                    directions_filled(2) = 1;
-                end
-                
-                
-                if(j > 1)
-                    if(map(i,j-1)==1)
-                        directions_filled(3)=1;
-                    end
-                else
-                    directions_filled(3)=1;
-                end
-                
-                if(j < size(map,2))
-                    if(map(i,j+1)==1)
-                        directions_filled(4)=1;
-                    end
-                else
-                    directions_filled(4)=1;
-                end
-                
-                if(all(directions_filled))
-                    map(i,j)=1;
-                end
-            end
-        end
-    end
-    
-    
-    
     [map, last_updated] = plot_grid(map, pos, bf, br, bl);
+
+    %map = plot_grid(map, pos, bf, br, bl, last_updated);
+    %last_updated = map(2);
+    %map = map(1);
+        
+    turnAngle(serPort,as,pi/8);
+    pos(3) = pos(3) + corrective*AngleSensorRoomba(serPort);
 end
 
