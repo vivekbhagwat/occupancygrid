@@ -6,9 +6,9 @@ function return_list = wall_follower(serPort, map, q_hit)
 if isSimulator(serPort)
     % time delays
     tdd = 0.5;
-    gs = 0.2; % general speed
+    gs = 015; % general speed
     ts = 0.2; % turning speed
-    th = 10; % angle in degrees to turn
+    th = 20; % angle in degrees to turn
     corrective = 1.0 ;%.5; % how much to fix the angle deltas by
     corrective2 = 1.0; % how much to fix, when bumping into wall
 else
@@ -48,7 +48,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
     
     [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     bump = (br == 1 || bl == 1 || bf == 1);
-    plot_grid(map, [x,y,angle], bump);
+    map = plot_grid(map, [x,y,angle], bump);
     
     % turn until not bumping wall
     % always turn counter-clockwise
@@ -75,7 +75,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         angle = angle + corrective2*a;
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         bump = (br == 1 || bl == 1 || bf == 1);
-        plot_grid(map, [x,y,angle], bump);
+        map = plot_grid(map, [x,y,angle], bump);
     end
     a = AngleSensorRoomba(serPort);
     angle = angle + corrective2*a;
@@ -139,4 +139,4 @@ SetFwdVelRadiusRoomba(serPort, 0, inf);
 display('Finished: back at starting point');
 pause(1);
 
-return_list = [x,y,angle];
+return_list = [[x,y,angle],map];
