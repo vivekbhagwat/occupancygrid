@@ -34,9 +34,9 @@ rectangle('position', [-map_size/2,-map_size/2, map_size, map_size],...
           'edgecolor',[0.5,0.5,0.5],...
           'facecolor',[0.5,0.5,0.5]);
 
-start_time = tic;
+last_udpated = tic;
 
-while(toc(start_time) < 10.0)
+while(toc(last_updated) < 10.0)
         DistanceSensorRoomba(serPort); % clear distance
     [br,bl, ~,~,~, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     bump = (bf==1 || br==1 || bl==1);
@@ -75,7 +75,9 @@ while(toc(start_time) < 10.0)
         pos(1) = pos(1) + d*cos(pos(3));
         pos(2) = pos(2) + d*sin(pos(3));
         % draw current location
-        map = plot_grid(map, pos, bf, br, bl);
+        map = plot_grid(map, pos, bf, br, bl, last_updated);
+        last_updated = map(2);
+        map = map(1);
     end
         
     SetFwdVelRadiusRoomba(serPort, 0, inf);
@@ -84,7 +86,7 @@ while(toc(start_time) < 10.0)
     a = wall_follower(serPort, map, pos);
     pos = a(1);
     map = a(2);
-    start_time = tic;
+%     start_time = tic;
     
     %replace completely surrounded -1s with 1s
     directions_filled = [0,0,0,0]; %up, down, left, right
@@ -134,8 +136,10 @@ while(toc(start_time) < 10.0)
         end
     end
 
-    map = plot_grid(map, pos, bump);
-    
+    map = plot_grid(map, pos, bf, br, bl, last_updated);
+    last_updated = map(2);
+    map = map(1);
+        
     turnAngle(serPort,as,pi/8);
     pos(3) = pos(3) + corrective*AngleSensorRoomba(serPort);
 end
