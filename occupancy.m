@@ -18,9 +18,9 @@ end
 pos = [0,0,0]; % [x,y,theta]
 
 % drawing initialization
-figure(1) % set the active figure handle to figure 1
-clf; % clear figure 1
-axis([0 10 -5 5]);
+% figure(1) % set the active figure handle to figure 1
+% clf; % clear figure 1
+% axis([0 10 -5 5]);
 hold on; %Set figure 1 not to clear itself on each call to plot
 
 start_time = tic;
@@ -34,6 +34,9 @@ while(toc(start_time) < 10.0)
     
     %MOVE AROUND RANDOMLY, HOPE SHIT DON'T BREAK.
     while(hit == 0 && dist(pos, goal)>goalError)
+        
+        
+        
         % go for a little while
         pause(td);
         % poll the bumpers
