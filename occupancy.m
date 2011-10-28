@@ -85,16 +85,44 @@ while(toc(start_time) < 10.0)
     for i = 1:size(map,1)
         for j = 1:size(map,2)
             if(map(i,j) == -1)
-                if(i > 1 && i < size(map,1))
-                    
+                
+                %check above
+                if(i > 1)
+                    if(map(i-1,j)==1)
+                        directions_filled(1) = 1;
+                    end
+                else
+                    directions_filled(1) = 1;
                 end
                 
-                if(j > 1 && j < size(map,2))
-                        
+                %check below
+                if(i < size(map,1))
+                    if(map(i+1,j)==1)
+                        directions_filled(2) = 1;
+                    end
+                else
+                    directions_filled(2) = 1;
                 end
                 
-                if [up,down,left,right] == [1,1,1,1]
-                    
+                
+                if(j > 1)
+                    if(map(i,j-1)==1)
+                        directions_filled(3)=1;
+                    end
+                else
+                    directions_filled(3)=1;
+                end
+                
+                if(j < size(map,2))
+                    if(map(i,j+1)==1)
+                        directions_filled(4)=1;
+                    end
+                else
+                    directions_filled(4)=1;
+                end
+                
+                if(all(directions_filled))
+                    map(i,j)=1;
                 end
             end
         end
