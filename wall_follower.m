@@ -47,8 +47,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
     display(sprintf('<x:%f y:%f> - <hit_x: %f hit_y:%f>', x,y, origin_x, origin_y));
     
     [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
-    bump = (br == 1 || bl == 1 || bf == 1);
-    map = plot_grid(map, [x,y,angle], bump);
+    map = plot_grid(map, [x,y,angle], bf, br, bl);
     
     % turn until not bumping wall
     % always turn counter-clockwise
@@ -74,8 +73,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         a = AngleSensorRoomba(serPort);
         angle = angle + corrective2*a;
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
-        bump = (br == 1 || bl == 1 || bf == 1);
-        map = plot_grid(map, [x,y,angle], bump);
+        map = plot_grid(map, [x,y,angle], bf, br, bl);
     end
     a = AngleSensorRoomba(serPort);
     angle = angle + corrective2*a;
@@ -118,8 +116,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
 %             i = i+1;
             [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         end
-        bump = (br == 1 || bl == 1 || bf == 1);
-        plot_grid(map, [x,y,angle], bump);
+        plot_grid(map, [x,y,angle], bf, br, bl);
     end
     
     a = AngleSensorRoomba(serPort);

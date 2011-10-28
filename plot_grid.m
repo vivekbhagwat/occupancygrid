@@ -1,4 +1,4 @@
-function [ map ] = plot_grid( map, pos, bump )
+function [ map ] = plot_grid( map, pos, bf, br, bl )
 % plot the current location, update the map
 
 % robot size
@@ -9,6 +9,13 @@ len = length(map);
 vect_len = 0.2;
 
 disp(pos)
+bump = (bf == 1 || br == 1 || bl == 1);
+angle = 0;
+if( br == 1 )
+    angle = -pi/4;
+elseif( bl == 1 )
+    angle = pi/4;
+end
 
 change = 0;
 
@@ -20,8 +27,8 @@ for a = 1:size(map, 1);
         y = robit_size*(a-len/2);
         xc = pos(1);
         yc = pos(2);
-        xb = pos(1) + robit_size*cos(pos(3));
-        yb = pos(2) + robit_size*sin(pos(3));
+        xb = pos(1) + robit_size/2*cos(pos(3)+angle);
+        yb = pos(2) + robit_size/2*sin(pos(3)+angle);
         % fill in non-occ if you go
         if(xc >= x - robit_size/2 && ...
            xc <= x + robit_size/2 && ...
