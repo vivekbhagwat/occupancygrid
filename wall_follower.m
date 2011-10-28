@@ -5,10 +5,10 @@ function return_list = wall_follower(serPort, map, q_hit, last_updated)
 % speed
 if isSimulator(serPort)
     % time delays
-    tdd = 0.5;
+    tdd = 0.4;
     gs = 0.15; % general speed
     ts = 0.2; % turning speed
-    th = 20; % angle in degrees to turn
+    th = 15; % angle in degrees to turn
     corrective = 1.0 ;%.5; % how much to fix the angle deltas by
     corrective2 = 1.0; % how much to fix, when bumping into wall
 else
@@ -20,7 +20,8 @@ else
     corrective2 = 2.0; 
 end
 
-thresh = 0.05; % how far away you need to move before returning
+dd = 0; % total distance traveled, to change strictness of thresh
+thresh = 0.5; % how far away you need to move before returning
 
 % Assume we're already touching the object
 
@@ -43,19 +44,20 @@ angle = origin_angle;
 ret = 0; % if we've moved far enough away
 
 BOOL = true; % check if we've touched the line
-while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1)) 
-    % display(sprintf('<x:%f y:%f> - <hit_x: %f hit_y:%f>', x,y, origin_x, origin_y));
+while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*0.2 &&...
+        ret == 1)) 
     
     [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
-    map = plot_grid(map, [x,y,angle], bf, br, bl);
-    last_updated = map(2);
-    map = map(1);
+    map = plot_grid(map, [x,y,angle], bf, br, bl, last_updated);
+    last_updated = map{2};
+    map = map{1};
     
     % turn until not bumping wall
     % always turn counter-clockwise
-    
     AngleSensorRoomba(serPort);
-    while(bf==1 || br==1 || bl ==1 && not(dist([x,y],[origin_x,origin_y]) < thresh && ret==1))
+    while(bf==1 || br==1 || bl ==1 &&...
+            not(dist([x,y],[origin_x,origin_y]) < thresh+dd*0.2 &&...
+            ret==1))
         if (wr || wl || wc)
             break;
         end
@@ -75,9 +77,9 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         a = AngleSensorRoomba(serPort);
         angle = angle + corrective2*a;
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
-        map = plot_grid(map, [x,y,angle], bf, br, bl);
-        last_updated = map(2);
-        map = map(1);
+        map = plot_grid(map, [x,y,angle], bf, br, bl, last_updated);
+        last_updated = map{2};
+        map = map{1};
     end
     a = AngleSensorRoomba(serPort);
     angle = angle + corrective2*a;
@@ -90,7 +92,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
             break;
         end
         
-%       display(sprintf('<(2) %f>', dist([x,y],[origin_x,origin_y])));
+        display(sprintf('<(2) %f>', dist([x,y],[origin_x,origin_y])));
 %       display(sprintf('<(3) %f>', dist_point_to_line([x,y],[origin_x,origin_y],[goal_x,goal_y])));
         
         % check if we've returned
@@ -108,11 +110,10 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         % update distance traveled
         b = DistanceSensorRoomba(serPort);
         a = AngleSensorRoomba(serPort);
+        dd = dd + b;
         angle = angle + corrective*a;
         x = x + b*cos(angle);
         y = y + b*sin(angle);
-        disp(x)
-        disp(y)
         % check if we've hit
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         if(bf==0 && br==0 && bl==0)
@@ -120,9 +121,9 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
 %             i = i+1;
             [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         end
-        map = plot_grid(map, [x,y,angle], bf, br, bl);
-        last_updated = map(2);
-        map = map(1);
+        map = plot_grid(map, [x,y,angle], bf, br, bl, last_updated);
+        last_updated = map{2};
+        map = map{1};
     end
     
     a = AngleSensorRoomba(serPort);
@@ -142,4 +143,4 @@ SetFwdVelRadiusRoomba(serPort, 0, inf);
 display('Finished: back at starting point');
 pause(1);
 
-return_list = [x,y,angle, map, last_updated];
+return_list = {[x,y,angle], map, last_updated};

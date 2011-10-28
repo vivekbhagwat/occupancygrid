@@ -8,7 +8,6 @@ len = length(map);
 % how long to draw the direction vector
 vect_len = 0.2;
 
-disp(pos)
 bump = (bf == 1 || br == 1 || bl == 1);
 angle = 0;
 if( br == 1 )
@@ -44,7 +43,7 @@ for a = 1:size(map, 1);
            xb <= x + robit_size/2 && ...
            yb >= y - robit_size/2 && ...
            yb <= y + robit_size/2)
-            if(bump==1)
+            if(bump==1 && not(map(a,b) == 1))
                 map(a,b) = 1;
                 change = 1;
             elseif(bump==0 && map(a,b) == -1)
@@ -76,5 +75,5 @@ plot(pos(1), pos(2), 'o');
 plot([pos(1),pos(1)+vect_len*cos(pos(3))], ...
      [pos(2),pos(2)+vect_len*sin(pos(3))]);
 
-ret = [map, timer];
+ret = {map, timer};
 end
