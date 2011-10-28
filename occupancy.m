@@ -26,10 +26,39 @@ hold on; %Set figure 1 not to clear itself on each call to plot
 start_time = tic;
 
 while(toc(start_time) < 10.0)
+        DistanceSensorRoomba(serPort); % clear distance
+    [br,bl, ~,~,~, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+    hit = (bf==1 || br==1 || bl==1);
+    % move towards goal
+    SetFwdVelRadiusRoomba(serPort, fs, inf);
     
+    %MOVE AROUND RANDOMLY, HOPE SHIT DON'T BREAK.
+    while(hit == 0 && dist(pos, goal)>goalError)
+        % go for a little while
+        pause(td);
+        % poll the bumpers
+        [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        % if picked up, kill
+        if (wr == 1 || wl == 1 || wc == 1)
+            SetFwdVelRadiusRoomba(serPort, 0, 0);
+            return;
+        end
+        hit = (bf==1 || br==1 || bl==1);
+        d = DistanceSensorRoomba(serPort);
+        pos(1) = pos(1) + d;
+        % draw current location
+        plot(pos(1), pos(2), 'o');
+    end
+        
+    SetFwdVelRadiusRoomba(serPort, 0, inf);
+
+    plot(pos(1), pos(2), 'o');
+
+    % wall follow
+    pos = wall_follower(serPort, pos);
+    start_time = tic;
     
-    % wall_follower(serPort, [x,y,angle])
-    % start_time = tic
-    
+    % draw location
+    plot(pos(1), pos(2), 'o');    
 end
 
