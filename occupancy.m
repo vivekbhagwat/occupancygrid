@@ -80,6 +80,28 @@ while(toc(start_time) < 10.0)
     pos = wall_follower(serPort, map, pos);
     start_time = tic;
     
+    %replace surrounded -1s with 1s
+    directions_filled = [0,0,0,0]; %up, down, left, right
+    for i = 1:size(map,1)
+        for j = 1:size(map,2)
+            if(map(i,j) == -1)
+                if(i > 1 && i < size(map,1))
+                    
+                end
+                
+                if(j > 1 && j < size(map,2))
+                        
+                end
+                
+                if [up,down,left,right] == [1,1,1,1]
+                    
+                end
+            end
+        end
+    end
+    
+    
+    
     plot_grid(map, pos, bump);
 end
 
