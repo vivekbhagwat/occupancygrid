@@ -6,7 +6,7 @@ function return_list = wall_follower(serPort, map, q_hit)
 if isSimulator(serPort)
     % time delays
     tdd = 0.5;
-    gs = 015; % general speed
+    gs = 0.15; % general speed
     ts = 0.2; % turning speed
     th = 20; % angle in degrees to turn
     corrective = 1.0 ;%.5; % how much to fix the angle deltas by
