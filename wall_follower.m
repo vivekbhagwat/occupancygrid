@@ -1,4 +1,4 @@
-function return_list = wall_follower(serPort, map, q_hit)
+function return_list = wall_follower(serPort, map, q_hit, last_updated)
 %should return current_position array [x,y,theta]
 %returns false if reaches where it was before.
 
@@ -48,6 +48,8 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
     
     [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     map = plot_grid(map, [x,y,angle], bf, br, bl);
+    last_updated = map(2);
+    map = map(1);
     
     % turn until not bumping wall
     % always turn counter-clockwise
@@ -74,6 +76,8 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         angle = angle + corrective2*a;
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         map = plot_grid(map, [x,y,angle], bf, br, bl);
+        last_updated = map(2);
+        map = map(1);
     end
     a = AngleSensorRoomba(serPort);
     angle = angle + corrective2*a;
@@ -116,7 +120,9 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
 %             i = i+1;
             [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         end
-        plot_grid(map, [x,y,angle], bf, br, bl);
+        map = plot_grid(map, [x,y,angle], bf, br, bl);
+        last_updated = map(2);
+        map = map(1);
     end
     
     a = AngleSensorRoomba(serPort);
@@ -136,4 +142,4 @@ SetFwdVelRadiusRoomba(serPort, 0, inf);
 display('Finished: back at starting point');
 pause(1);
 
-return_list = [x,y,angle,map];
+return_list = [x,y,angle, map, last_updated];

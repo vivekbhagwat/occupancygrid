@@ -83,16 +83,14 @@ while(toc(last_updated) < 10.0)
     SetFwdVelRadiusRoomba(serPort, 0, inf);
 
     % wall follow
-    a = wall_follower(serPort, map, pos);
+    a = wall_follower(serPort, map, pos, last_updated);
     pos = a(1:3);
     map = a(4);
-    start_time = tic;
+    last_updated = a(5);
     
-    [map, last_updated] = plot_grid(map, pos, bf, br, bl);
-
-    %map = plot_grid(map, pos, bf, br, bl, last_updated);
-    %last_updated = map(2);
-    %map = map(1);
+    map = plot_grid(map, pos, bf, br, bl, last_updated);
+    last_updated = map(2);
+    map = map(1);
         
     turnAngle(serPort,as,pi/8);
     pos(3) = pos(3) + corrective*AngleSensorRoomba(serPort);
