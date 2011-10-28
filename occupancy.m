@@ -21,7 +21,14 @@ bump = 0;
 
 % drawing initialization
 
+robit_size = 0.4; % also set it in plot_grid
 figure(1) % set the active figure handle to figure 1
+clf; % clear figure 1
+len = length(map); % assume the map is square
+mapsize = len*robit_size * 2;
+axis([-mapsize/2 mapsize/2  -mapsize/2 mapsize/2]); % in meters
+hold on; % don't clear figure with each plot()
+
 plot_grid(map, pos, bump);
 
 start_time = tic;

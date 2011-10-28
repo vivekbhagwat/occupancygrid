@@ -8,12 +8,6 @@ len = length(map);
 % how long to draw the direction vector
 vect_len = 0.1;
 
-% clear figure 1
-clf;
-mapsize = len*robit_size;
-axis([-mapsize/2 mapsize/2  -mapsize/2 mapsize/2]); % in meters
-hold on; % don't clear figure with each plot()
-
 % print the grid
 for a = 1:size(map, 1);
     for b = 1:size(map, 2);
