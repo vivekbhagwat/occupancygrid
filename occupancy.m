@@ -17,11 +17,14 @@ end
 
 pos = [0,0,0]; % [x,y,theta]
 
+% map size in terms of 
+mapsize = 20;
+map = zeros(mapsize);
+bump = 0;
+
 % drawing initialization
 figure(1) % set the active figure handle to figure 1
-clf; % clear figure 1
-axis([0 10 -5 5]);
-hold on; %Set figure 1 not to clear itself on each call to plot
+plot_grid(map, pos, bump);
 
 start_time = tic;
 
@@ -38,27 +41,25 @@ while(toc(start_time) < 10.0)
         pause(td);
         % poll the bumpers
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        bump = br == 1 || bl == 1 || bf == 1;
         % if picked up, kill
         if (wr == 1 || wl == 1 || wc == 1)
             SetFwdVelRadiusRoomba(serPort, 0, 0);
             return;
         end
-        hit = (bf==1 || br==1 || bl==1);
+        hit = bump;
         d = DistanceSensorRoomba(serPort);
         pos(1) = pos(1) + d;
         % draw current location
-        plot(pos(1), pos(2), 'o');
+        plot_grid(map, pos, bump);
     end
         
     SetFwdVelRadiusRoomba(serPort, 0, inf);
-
-    plot(pos(1), pos(2), 'o');
 
     % wall follow
     pos = wall_follower(serPort, pos);
     start_time = tic;
     
-    % draw location
-    plot(pos(1), pos(2), 'o');    
+    plot_grid(map, pos, bump);
 end
 
