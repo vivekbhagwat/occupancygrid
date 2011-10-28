@@ -33,10 +33,16 @@ while(toc(start_time) < 10.0)
         DistanceSensorRoomba(serPort); % clear distance
     [br,bl, ~,~,~, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     hit = (bf==1 || br==1 || bl==1);
-    % move towards goal
+    
+    
+    
+    % move around randomly.
     SetFwdVelRadiusRoomba(serPort, fs, inf);
     
-    %MOVE AROUND RANDOMLY, HOPE SHIT DON'T BREAK.
+
+    
+    
+    %KEEP MOVING AROUND RANDOMLY, HOPE SHIT DON'T BREAK.
     while(hit == 0 && dist(pos, goal)>goalError)
         % go for a little while
         pause(td);
@@ -50,6 +56,7 @@ while(toc(start_time) < 10.0)
         end
         hit = bump;
         d = DistanceSensorRoomba(serPort);
+
         pos(1) = pos(1) + d;
         % draw current location
         plot_grid(map, pos, bump);
