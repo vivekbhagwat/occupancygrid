@@ -6,7 +6,7 @@ robit_size = 0.4;
 % assume the map is square
 len = length(map);
 % how long to draw the direction vector
-vect_len = 0.5;
+vect_len = 0.1;
 
 % clear figure 1
 clf;
@@ -31,6 +31,9 @@ for a = 1:size(map, 1);
         if map(a,b)==1
             rectangle('position', [x-0.5,y-0.5,1,1], ...
                 'facecolor',[0,0,0]);
+        else
+            rectangle('position', [x-0.5,y-0.5,1,1], ...
+                'facecolor',[1.0,1.0,1.0]);
         end
     end
 end

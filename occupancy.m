@@ -1,8 +1,5 @@
 function map = occupancy(serPort)
 
-goalError = 0.2; % distance from goal to hit
-angleError = 0.1; % radians, before we start going towards goal
-
 if isSimulator(serPort)
     td = 0.1; % time delta to wait
     fs = 0.1; % forward speed
@@ -32,29 +29,23 @@ start_time = tic;
 while(toc(start_time) < 10.0)
         DistanceSensorRoomba(serPort); % clear distance
     [br,bl, ~,~,~, bf] = BumpsWheelDropsSensorsRoomba(serPort);
-    hit = (bf==1 || br==1 || bl==1);
-    
-    
+    bump = (bf==1 || br==1 || bl==1);
     
     % move around randomly.
     SetFwdVelRadiusRoomba(serPort, fs, inf);
     
-
-    
-    
     %KEEP MOVING AROUND RANDOMLY, HOPE SHIT DON'T BREAK.
-    while(hit == 0 && dist(pos, goal)>goalError)
+    while(bump == 0)
         % go for a little while
         pause(td);
         % poll the bumpers
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
-        bump = (br == 1 || bl == 1 || bf == 1);
         % if picked up, kill
         if (wr == 1 || wl == 1 || wc == 1)
             SetFwdVelRadiusRoomba(serPort, 0, 0);
             return;
         end
-        hit = bump;
+        bump = (br == 1 || bl == 1 || bf == 1);
         d = DistanceSensorRoomba(serPort);
 
         pos(1) = pos(1) + d;
