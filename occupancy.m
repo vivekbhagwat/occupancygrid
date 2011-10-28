@@ -1,8 +1,8 @@
 function map = occupancy(serPort)
 
 if isSimulator(serPort)
-    td = 0.1; % time delta to wait
-    fs = 0.1; % forward speed
+    td = 0.05; % time delta to wait
+    fs = 0.2; % forward speed
     as = 0.2; % angle speed (0, 0.2 m/s)    
     corrective = 1.0; %.5; % how much to fix the angle deltas by
 else
@@ -15,19 +15,25 @@ end
 pos = [0,0,0]; % [x,y,theta]
 
 % map size in terms of 
-mapsize = 10;
-map = zeros(mapsize);
+mapsize = 30;
+map = -1*ones(mapsize);
 bump = 0;
 
 % drawing initialization
 
-robit_size = 0.3; % also set it in plot_grid
+robit_size = 0.25; % also set it in plot_grid
 figure(1) % set the active figure handle to figure 1
 clf; % clear figure 1
 len = length(map); % assume the map is square
 mapsize = len*robit_size * 1.2;
 axis([-mapsize/2 mapsize/2  -mapsize/2 mapsize/2]); % in meters
 hold on; % don't clear figure with each plot()
+
+% draw a gray background
+map_size = robit_size*len;
+rectangle('position', [-map_size/2,-map_size/2, map_size, map_size],...
+          'edgecolor',[0.5,0.5,0.5],...
+          'facecolor',[0.5,0.5,0.5]);
 
 plot_grid(map, pos, bump);
 

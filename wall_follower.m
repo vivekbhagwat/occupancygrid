@@ -40,17 +40,15 @@ x = origin_x;
 y = origin_y;
 angle = origin_angle;
 
-bump = 0;
-
 ret = 0; % if we've moved far enough away
 
 BOOL = true; % check if we've touched the line
 while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1)) 
     display(sprintf('<x:%f y:%f> - <hit_x: %f hit_y:%f>', x,y, origin_x, origin_y));
-    plot_grid(map, [x,y,angle], bump);
     
     [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     bump = (br == 1 || bl == 1 || bf == 1);
+    plot_grid(map, [x,y,angle], bump);
     
     % turn until not bumping wall
     % always turn counter-clockwise
@@ -77,6 +75,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         angle = angle + corrective2*a;
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         bump = (br == 1 || bl == 1 || bf == 1);
+        plot_grid(map, [x,y,angle], bump);
     end
     a = AngleSensorRoomba(serPort);
     angle = angle + corrective2*a;
@@ -91,7 +90,6 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         
         display(sprintf('<(2) %f>', dist([x,y],[origin_x,origin_y])));
 %         display(sprintf('<(3) %f>', dist_point_to_line([x,y],[origin_x,origin_y],[goal_x,goal_y])));
-        plot_grid(map, [x,y,angle], bump);
         
         % check if we've returned
         if(dist([x,y],[origin_x,origin_y]) < thresh && ret==1)
@@ -121,6 +119,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
             [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         end
         bump = (br == 1 || bl == 1 || bf == 1);
+        plot_grid(map, [x,y,angle], bump);
     end
     
     a = AngleSensorRoomba(serPort);
