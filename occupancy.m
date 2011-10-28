@@ -82,8 +82,8 @@ while(toc(start_time) < 10.0)
 
     % wall follow
     a = wall_follower(serPort, map, pos);
-    pos = a(1);
-    map = a(2);
+    pos = a(1:3);
+    map = a(4);
     start_time = tic;
     
     %replace completely surrounded -1s with 1s
@@ -136,6 +136,6 @@ while(toc(start_time) < 10.0)
     
     
     
-    map = plot_grid(map, pos, bf, br, bl);
+    [map, last_updated] = plot_grid(map, pos, bf, br, bl);
 end
 

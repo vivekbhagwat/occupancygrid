@@ -44,7 +44,7 @@ ret = 0; % if we've moved far enough away
 
 BOOL = true; % check if we've touched the line
 while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1)) 
-    display(sprintf('<x:%f y:%f> - <hit_x: %f hit_y:%f>', x,y, origin_x, origin_y));
+    % display(sprintf('<x:%f y:%f> - <hit_x: %f hit_y:%f>', x,y, origin_x, origin_y));
     
     [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     map = plot_grid(map, [x,y,angle], bf, br, bl);
@@ -86,8 +86,8 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
             break;
         end
         
-        display(sprintf('<(2) %f>', dist([x,y],[origin_x,origin_y])));
-%         display(sprintf('<(3) %f>', dist_point_to_line([x,y],[origin_x,origin_y],[goal_x,goal_y])));
+%       display(sprintf('<(2) %f>', dist([x,y],[origin_x,origin_y])));
+%       display(sprintf('<(3) %f>', dist_point_to_line([x,y],[origin_x,origin_y],[goal_x,goal_y])));
         
         % check if we've returned
         if(dist([x,y],[origin_x,origin_y]) < thresh && ret==1)
@@ -127,7 +127,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
     end
     
 	% pause(0.5);
-	display(sprintf('%f %f %f', bf, br, bl));
+	% display(sprintf('%f %f %f', bf, br, bl));
 end
 
 % stop the robot if we broke the loop
@@ -136,4 +136,4 @@ SetFwdVelRadiusRoomba(serPort, 0, inf);
 display('Finished: back at starting point');
 pause(1);
 
-return_list = [[x,y,angle],map];
+return_list = [x,y,angle,map];

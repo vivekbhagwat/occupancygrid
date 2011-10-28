@@ -1,4 +1,4 @@
-function [ map ] = plot_grid( map, pos, bf, br, bl )
+function ret = plot_grid( map, pos, bf, br, bl, timer )
 % plot the current location, update the map
 
 % robot size
@@ -64,6 +64,9 @@ for a = 1:size(map, 1);
                 'edgecolor',[1,1,1], ...
                 'facecolor',[1,1,1]);
         end
+        if change == 1
+            timer = tic;
+        end
     end
 end
 
@@ -73,4 +76,5 @@ plot(pos(1), pos(2), 'o');
 plot([pos(1),pos(1)+vect_len*cos(pos(3))], ...
      [pos(2),pos(2)+vect_len*sin(pos(3))]);
 
+ret = [map, timer];
 end
