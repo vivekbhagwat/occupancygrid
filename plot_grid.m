@@ -10,23 +10,19 @@ vect_len = 0.2;
 
 disp(pos)
 
-%map_size = robit_size*len;
-%rectangle('position', [-map_size/2,-map_size/2, map_size, map_size],...
-%          'facecolor',[1.0,1.0,1.0]);
-
 % print the grid
 for a = 1:size(map, 1);
     for b = 1:size(map, 2);
         % x and y are what you would expect from viewing the array
         x = robit_size*(b-len/2);
         y = robit_size*(a-len/2);
-        xc = x + robit_size*sin(pos(3));
-        yc = y + robit_size*cos(pos(3));
+        xc = pos(1) + robit_size*cos(pos(3));
+        yc = pos(2) + robit_size*sin(pos(3));
         % fills in the obstacle at the bump sensor
-        if(pos(1) >= xc - robit_size/2 && ...
-            pos(1) <= xc + robit_size/2 && ...
-            pos(2) >= yc - robit_size/2 && ...
-            pos(2) <= yc + robit_size/2)
+        if(xc >= x - robit_size/2 && ...
+           xc <= x + robit_size/2 && ...
+           yc >= y - robit_size/2 && ...
+           yc <= y + robit_size/2)
             if(bump==1)
                 map(a,b) = 1;
             elseif(bump==0 && map(a,b) == -1)
