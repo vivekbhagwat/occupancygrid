@@ -17,7 +17,6 @@ pos = [0,0,0]; % [x,y,theta]
 % map size in terms of 
 mapsize = 30;
 map = -1*ones(mapsize);
-bump = 0;
 
 % drawing initialization
 
@@ -34,8 +33,6 @@ map_size = robit_size*len;
 rectangle('position', [-map_size/2,-map_size/2, map_size, map_size],...
           'edgecolor',[0.5,0.5,0.5],...
           'facecolor',[0.5,0.5,0.5]);
-
-map = plot_grid(map, pos, bump);
 
 start_time = tic;
 
@@ -78,7 +75,7 @@ while(toc(start_time) < 10.0)
         pos(1) = pos(1) + d*cos(pos(3));
         pos(2) = pos(2) + d*sin(pos(3));
         % draw current location
-        map = plot_grid(map, pos, bump);
+        map = plot_grid(map, pos, bf, br, bl);
     end
         
     SetFwdVelRadiusRoomba(serPort, 0, inf);
@@ -139,6 +136,6 @@ while(toc(start_time) < 10.0)
     
     
     
-    map = plot_grid(map, pos, bump);
+    map = plot_grid(map, pos, bf, br, bl);
 end
 
