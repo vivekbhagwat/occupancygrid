@@ -51,7 +51,7 @@ while(toc(start_time) < 10.0)
 %         while(toc(start_time) < 1.0)
 %         end
         pause(0.5);
-        
+        SetFwdVelRadiusRoomba(serPort,0,0);
         % turn until we are pointing towards the goal
         start_angle = AngleSensorRoomba(serPort);
         while(abs(start_angle-pos(3)) < pi/4)
