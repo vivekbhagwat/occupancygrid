@@ -15,17 +15,17 @@ end
 pos = [0,0,0]; % [x,y,theta]
 
 % map size in terms of 
-mapsize = 20;
+mapsize = 10;
 map = zeros(mapsize);
 bump = 0;
 
 % drawing initialization
 
-robit_size = 0.4; % also set it in plot_grid
+robit_size = 0.3; % also set it in plot_grid
 figure(1) % set the active figure handle to figure 1
 clf; % clear figure 1
 len = length(map); % assume the map is square
-mapsize = len*robit_size * 2;
+mapsize = len*robit_size * 1.2;
 axis([-mapsize/2 mapsize/2  -mapsize/2 mapsize/2]); % in meters
 hold on; % don't clear figure with each plot()
 
@@ -47,12 +47,12 @@ while(toc(start_time) < 10.0)
         pause(td);
         % poll the bumpers
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        bump = (br == 1 || bl == 1 || bf == 1);
         % if picked up, kill
         if (wr == 1 || wl == 1 || wc == 1)
             SetFwdVelRadiusRoomba(serPort, 0, 0);
             return;
         end
-        bump = (br == 1 || bl == 1 || bf == 1);
         d = DistanceSensorRoomba(serPort);
 
         pos(1) = pos(1) + d;
@@ -63,7 +63,7 @@ while(toc(start_time) < 10.0)
     SetFwdVelRadiusRoomba(serPort, 0, inf);
 
     % wall follow
-    pos = wall_follower(serPort, pos);
+    pos = wall_follower(serPort, map, pos);
     start_time = tic;
     
     plot_grid(map, pos, bump);

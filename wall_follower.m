@@ -1,11 +1,6 @@
-function return_list = wall_follower(serPort, q_hit)
+function return_list = wall_follower(serPort, map, q_hit)
 %should return current_position array [x,y,theta]
 %returns false if reaches where it was before.
-
-% angle in degrees to turn
-th = 5;
-
-vect_len = 0.3; % length of vector
 
 % speed
 if isSimulator(serPort)
@@ -13,12 +8,14 @@ if isSimulator(serPort)
     tdd = 0.5;
     gs = 0.2; % general speed
     ts = 0.2; % turning speed
+    th = 10; % angle in degrees to turn
     corrective = 1.0 ;%.5; % how much to fix the angle deltas by
     corrective2 = 1.0; % how much to fix, when bumping into wall
 else
     tdd = 0.01;
     gs = 0.1;
     ts = 0.05;
+    th = 5;
     corrective = 2.0; 
     corrective2 = 2.0; 
 end
@@ -43,14 +40,17 @@ x = origin_x;
 y = origin_y;
 angle = origin_angle;
 
+bump = 0;
+
 ret = 0; % if we've moved far enough away
 
 BOOL = true; % check if we've touched the line
 while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1)) 
     display(sprintf('<x:%f y:%f> - <hit_x: %f hit_y:%f>', x,y, origin_x, origin_y));
-    plot(x, y, 'o');
-    plot([x,x+vect_len*cos(angle)], [y,y+vect_len*sin(angle)]);
+    plot_grid(map, [x,y,angle], bump);
+    
     [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+    bump = (br == 1 || bl == 1 || bf == 1);
     
     % turn until not bumping wall
     % always turn counter-clockwise
@@ -76,6 +76,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         a = AngleSensorRoomba(serPort);
         angle = angle + corrective2*a;
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        bump = (br == 1 || bl == 1 || bf == 1);
     end
     a = AngleSensorRoomba(serPort);
     angle = angle + corrective2*a;
@@ -90,8 +91,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
         
         display(sprintf('<(2) %f>', dist([x,y],[origin_x,origin_y])));
 %         display(sprintf('<(3) %f>', dist_point_to_line([x,y],[origin_x,origin_y],[goal_x,goal_y])));
-        plot(x, y, 'o');
-        plot([x,x+vect_len*cos(angle)], [y,y+vect_len*sin(angle)]);
+        plot_grid(map, [x,y,angle], bump);
         
         % check if we've returned
         if(dist([x,y],[origin_x,origin_y]) < thresh && ret==1)
@@ -120,6 +120,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh && ret == 1))
 %             i = i+1;
             [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         end
+        bump = (br == 1 || bl == 1 || bf == 1);
     end
     
     a = AngleSensorRoomba(serPort);

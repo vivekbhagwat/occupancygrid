@@ -2,11 +2,17 @@ function [ map ] = plot_grid( map, pos, bump )
 % plot the current location, update the map
 
 % robot size
-robit_size = 0.4;
+robit_size = 0.3;
 % assume the map is square
 len = length(map);
 % how long to draw the direction vector
-vect_len = 0.1;
+vect_len = 0.2;
+
+disp(pos)
+
+%map_size = robit_size*len;
+%rectangle('position', [-map_size/2,-map_size/2, map_size, map_size],...
+%          'facecolor',[1.0,1.0,1.0]);
 
 % print the grid
 for a = 1:size(map, 1);
@@ -16,18 +22,16 @@ for a = 1:size(map, 1);
     y = robit_size*(a-len/2);
         % ### todo, fill at bump, not center
         if(bump && ...
-            pos(1) >= x - 0.5 && ...
-            pos(1) <= x + 0.5 && ...
-            pos(2) <= y - 0.5 && ...
-            pos(2) <= y + 0.5)
+            pos(1) >= x - robit_size/2 && ...
+            pos(1) <= x + robit_size/2 && ...
+            pos(2) >= y - robit_size/2 && ...
+            pos(2) <= y + robit_size/2)
             map(a,b) = 1;
         end
         if map(a,b)==1
-            rectangle('position', [x-0.5,y-0.5,1,1], ...
+            rectangle('position', [x-robit_size/2,y-robit_size/2, ...
+                robit_size,robit_size], ...
                 'facecolor',[0,0,0]);
-        else
-            rectangle('position', [x-0.5,y-0.5,1,1], ...
-                'facecolor',[1.0,1.0,1.0]);
         end
     end
 end
