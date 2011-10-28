@@ -23,6 +23,7 @@ map = zeros(mapsize);
 bump = 0;
 
 % drawing initialization
+
 figure(1) % set the active figure handle to figure 1
 plot_grid(map, pos, bump);
 
