@@ -48,7 +48,13 @@ BOOL = true; % check if we've touched the line
 while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         ret == 1)) 
     
-    [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+    br = NaN; bl = NaN; bf = NaN;
+    while(isNaN(br) || isNaN(bl) || isNaN(bf))
+        [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+    end
+    if (wr || wl || wc)
+        break;
+    end
     map = plot_grid(map, [x,y,angle], bf, br, bl, last_updated);
     last_updated = map{2};
     map = map{1};
@@ -59,9 +65,6 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
     while(bf==1 || br==1 || bl ==1 &&...
             not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
             ret==1))
-        if (wr || wl || wc)
-            break;
-        end
         % check if we've returned
         if(dist([x,y],[origin_x,origin_y]) < thresh && ret==1)
             continue;
@@ -77,14 +80,23 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         end
         a = AngleSensorRoomba(serPort);
         angle = angle + corrective2*a;
-        [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        br = NaN; bl = NaN; bf = NaN;
+        while(isNaN(br) || isNaN(bl) || isNaN(bf))
+            [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        end
+        if (wr == 1 || wl == 1 || wc == 1)
+            break;
+        end
         map = plot_grid(map, [x,y,angle], bf, br, bl, last_updated);
         last_updated = map{2};
         map = map{1};
     end
     a = AngleSensorRoomba(serPort);
     angle = angle + corrective2*a;
-
+    
+    if (wr == 1 || wl == 1 || wc == 1)
+        break;
+    end
     
     % move, turn (clockwise) until touch the wall again
     i = 0;
@@ -116,11 +128,19 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         x = x + b*cos(angle);
         y = y + b*sin(angle);
         % check if we've hit
-        [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        br = NaN; bl = NaN; bf = NaN;
+        while(isNaN(br) || isNaN(bl) || isNaN(bf))
+            [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        end
+        if (wr == 1 || wl == 1 || wc == 1)
+            break;
+        end
         if(bf==0 && br==0 && bl==0)
             turnAngle(serPort,  ts, -th*(1+i*0.1));
-%             i = i+1;
-            [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+            br = NaN; bl = NaN; bf = NaN;
+            while(isNaN(br) || isNaN(bl) || isNaN(bf))
+                [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+            end
         end
         map = plot_grid(map, [x,y,angle], bf, br, bl, last_updated);
         last_updated = map{2};

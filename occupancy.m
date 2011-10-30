@@ -90,6 +90,15 @@ while(toc(last_updated) < timeout)
 
     % wall follow
     a = wall_follower(serPort, map, pos, last_updated);
+    % check if we've picked it up in the wall following process
+    br = NaN; bl = NaN; bf = NaN;
+    while(isNaN(br) || isNaN(bl) || isNaN(bf))
+        [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+    end
+    if (wr == 1 || wl == 1 || wc == 1)
+        return;
+    end
+    % update the map
     pos = a{1};
     map = a{2};
     last_updated = a{3};
@@ -98,10 +107,9 @@ while(toc(last_updated) < timeout)
     last_updated = map{2};
     map = map{1};
 
-    turnAngle(serPort,as,45); % fucking shit uses degrees
+    turnAngle(serPort,as,135); % fucking shit uses degrees
     pos(3) = pos(3) + corrective*AngleSensorRoomba(serPort);
     
-    pause(10);
 end
 
 disp('Done!')
