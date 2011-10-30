@@ -7,10 +7,10 @@ if isSimulator(serPort)
     as = 0.2; % angle speed (0, 0.2 m/s)    
     corrective = 1.0; %.5; % how much to fix the angle deltas by
 else
-    td = 0.01;
+    td = 0.001; %was .01
     tdd = 0.01;
-    fs = 0.1;
-    as = 0.02;
+    fs = 0.1; %was .1
+    as = 0.02; %was .02
     corrective = 1.0; 
 end
 
@@ -159,6 +159,7 @@ while(toc(last_updated) < timeout)
     
 end
 
+SetFwdVelRadiusRoomba(serPort,0,inf);
 disp('Done!')
 
 end

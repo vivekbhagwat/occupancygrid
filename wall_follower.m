@@ -12,7 +12,7 @@ if isSimulator(serPort)
     corrective = 1.0 ;%.5; % how much to fix the angle deltas by
     corrective2 = 1.0; % how much to fix, when bumping into wall
 else
-    tdd = 0.01;
+    tdd = 0.001;
     gs = 0.1;
     ts = 0.05;
     th = 5;
