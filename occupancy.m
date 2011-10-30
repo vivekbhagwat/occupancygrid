@@ -1,7 +1,7 @@
 function map = occupancy(serPort)
 
 if isSimulator(serPort)
-    td = 0.05; % time delta to wait
+    td = 0.1; % time delta to wait
     tdd = 0.4; % time delta - used to be 3.0
     fs = 0.2; % forward speed
     as = 0.2; % angle speed (0, 0.2 m/s)    
@@ -94,14 +94,14 @@ while(toc(last_updated) < timeout)
     map = a{2};
     last_updated = a{3};
     
-    break;
-    
     map = plot_grid(map, pos, bf, br, bl, last_updated);
     last_updated = map{2};
     map = map{1};
 
-    turnAngle(serPort,as,pi/8);
+    turnAngle(serPort,as,45); % fucking shit uses degrees
     pos(3) = pos(3) + corrective*AngleSensorRoomba(serPort);
+    
+    pause(10);
 end
 
 disp('Done!')

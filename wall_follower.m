@@ -16,13 +16,13 @@ else
     gs = 0.1;
     ts = 0.05;
     th = 5;
-    corrective = 2.0; 
-    corrective2 = 2.0; 
+    corrective = 2.0;
+    corrective2 = 2.0;
 end
 
 dd = 0; % total distance traveled, to change strictness of thresh
 strict = 0.01; % strictness constant
-thresh = 0.1; % how far away you need to move before returning
+thresh = 0.2; % how far away you need to move before returning
 
 % Assume we're already touching the object
 
@@ -100,7 +100,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         if(dist([x,y],[origin_x,origin_y]) < thresh && ret==1)
             BOOL = false;
             continue;
-        elseif(dist([x,y],[origin_x,origin_y]) > 2*thresh && ret==0)
+        elseif(dist([x,y],[origin_x,origin_y]) > 3*thresh && ret==0)
             ret = 1;
         end
         
