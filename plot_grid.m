@@ -75,5 +75,5 @@ plot(pos(1), pos(2), 'o');
 plot([pos(1),pos(1)+vect_len*cos(pos(3))], ...
      [pos(2),pos(2)+vect_len*sin(pos(3))]);
 
-ret = {map, timer};
+ret = {map, timer, change};
 end

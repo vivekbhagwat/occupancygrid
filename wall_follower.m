@@ -49,7 +49,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         ret == 1)) 
     
     br = NaN; bl = NaN; bf = NaN;
-    while(isNaN(br) || isNaN(bl) || isNaN(bf))
+    while(isnan(br) || isnan(bl) || isnan(bf))
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     end
     if (wr || wl || wc)
@@ -81,7 +81,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         a = AngleSensorRoomba(serPort);
         angle = angle + corrective2*a;
         br = NaN; bl = NaN; bf = NaN;
-        while(isNaN(br) || isNaN(bl) || isNaN(bf))
+        while(isnan(br) || isnan(bl) || isnan(bf))
             [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         end
         if (wr == 1 || wl == 1 || wc == 1)
@@ -129,7 +129,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         y = y + b*sin(angle);
         % check if we've hit
         br = NaN; bl = NaN; bf = NaN;
-        while(isNaN(br) || isNaN(bl) || isNaN(bf))
+        while(isnan(br) || isnan(bl) || isnan(bf))
             [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
         end
         if (wr == 1 || wl == 1 || wc == 1)
@@ -138,7 +138,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         if(bf==0 && br==0 && bl==0)
             turnAngle(serPort,  ts, -th*(1+i*0.1));
             br = NaN; bl = NaN; bf = NaN;
-            while(isNaN(br) || isNaN(bl) || isNaN(bf))
+            while(isnan(br) || isnan(bl) || isnan(bf))
                 [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
             end
         end

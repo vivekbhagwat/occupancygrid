@@ -42,7 +42,13 @@ last_updated = tic;
 
 while(toc(last_updated) < timeout)
         DistanceSensorRoomba(serPort); % clear distance
-    [br,bl, ~,~,~, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+    br = NaN; bl = NaN; bf = NaN;
+    while(isnan(br) || isnan(bl) || isnan(bf))
+        [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+    end
+    if (wr == 1 || wl == 1 || wc == 1)
+        return;
+    end
     bump = (bf==1 || br==1 || bl==1);
     
     SetFwdVelRadiusRoomba(serPort, fs, inf);
@@ -65,21 +71,62 @@ while(toc(last_updated) < timeout)
         % go for a little while
         pause(td);
         % poll the bumpers
-        [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+
+        br = NaN; bl = NaN; bf = NaN;
+        while(isnan(br) || isnan(bl) || isnan(bf))
+            [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+        end
         bump = (br == 1 || bl == 1 || bf == 1);
         % if picked up, kill
         if (wr == 1 || wl == 1 || wc == 1)
             SetFwdVelRadiusRoomba(serPort, 0, 0);
             return;
         end
+        % update the location
         d = DistanceSensorRoomba(serPort);
-
         pos(1) = pos(1) + d*cos(pos(3));
         pos(2) = pos(2) + d*sin(pos(3));
         % draw current location
         map = plot_grid(map, pos, bf, br, bl, last_updated);
         last_updated = map{2};
+        change = map{3};
         map = map{1};
+        % check if we hit a known obstacle
+        if(change == 0 && bump == 1)
+            % if so, turn tail and run for a bit
+            turnAngle(serPort, as, 180);
+            angle = AngleSensorRoomba(serPort);
+            pos(3) = pos(3) + corrective*angle;
+            
+            dtraveled = 0.0;
+            while(dtraveled < 1.0)
+                SetFwdVelRadiusRoomba(serPort,fs,inf);
+                pause(td);
+                SetFwdVelRadiusRoomba(serPort,0,inf);
+                
+                d = DistanceSensorRoomba(serPort);
+                dtraveled = dtraveled + d;
+                pos(1) = pos(1) + d*cos(pos(3));
+                pos(2) = pos(2) + d*sin(pos(3));
+                
+                br = NaN; bl = NaN; bf = NaN;
+                while(isnan(br) || isnan(bl) || isnan(bf))
+                    [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
+                end
+                bump = (bf==1 || br==1 || bl==1);
+                if (wr == 1 || wl == 1 || wc == 1)
+                    return;
+                end
+                % breakout chain
+                if(toc(last_updated) > timeout || bump == 1)
+                    break;
+                end
+            end
+            % breakout chain
+            if(toc(last_updated) > timeout || bump == 1)
+                break;
+            end
+        end
     end
     
     if(toc(last_updated) > timeout)
@@ -92,7 +139,7 @@ while(toc(last_updated) < timeout)
     a = wall_follower(serPort, map, pos, last_updated);
     % check if we've picked it up in the wall following process
     br = NaN; bl = NaN; bf = NaN;
-    while(isNaN(br) || isNaN(bl) || isNaN(bf))
+    while(isnan(br) || isnan(bl) || isnan(bf))
         [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
     end
     if (wr == 1 || wl == 1 || wc == 1)
