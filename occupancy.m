@@ -7,10 +7,10 @@ if isSimulator(serPort)
     as = 0.2; % angle speed (0, 0.2 m/s)    
     corrective = 1.0; %.5; % how much to fix the angle deltas by
 else
-    td = 0.01;
+    td = 0.001; %was .01
     tdd = 0.01;
-    fs = 0.1;
-    as = 0.02;
+    fs = 0.1; %was .1
+    as = 0.02; %was .02
     corrective = 1.0; 
 end
 
@@ -98,12 +98,13 @@ while(toc(last_updated) < timeout)
     last_updated = map{2};
     map = map{1};
 
-    turnAngle(serPort,as,45); % fucking shit uses degrees
+    turnAngle(serPort,as,135); % fucking shit uses degrees
     pos(3) = pos(3) + corrective*AngleSensorRoomba(serPort);
     
-    pause(10);
+%     pause(10);
 end
 
+SetFwdVelRadiusRoomba(serPort,0,inf);
 disp('Done!')
 
 end
