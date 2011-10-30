@@ -16,8 +16,8 @@ else
     gs = 0.1;
     ts = 0.05;
     th = 5;
-    corrective = 2.0;
-    corrective2 = 2.0;
+    corrective = 1.0;
+    corrective2 = 1.0;
 end
 
 dd = 0; % total distance traveled, to change strictness of thresh
