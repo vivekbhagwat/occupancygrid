@@ -14,7 +14,7 @@ else
     corrective = 1.0; 
 end
 
-timeout = 30.0;
+timeout = 90.0;
 
 pos = [0,0,0]; % [x,y,theta]
 
