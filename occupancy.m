@@ -14,7 +14,7 @@ else
     corrective = 1.5; 
 end
 
-timeout = 10.0;
+timeout = 30.0;
 
 pos = [0,0,0]; % [x,y,theta]
 
@@ -56,7 +56,7 @@ while(toc(last_updated) < timeout)
         while(abs(start_angle-pos(3)) < pi/8 && ...
                 toc(last_updated) < timeout)
             turnAngle(serPort, as, pi/8*da);
-            da = 0.95*da;
+            da = 0.9*da;
             angle = AngleSensorRoomba(serPort);
             pos(3) = pos(3) + corrective*angle;
         end
@@ -81,6 +81,10 @@ while(toc(last_updated) < timeout)
         last_updated = map{2};
         map = map{1};
     end
+    
+    if(toc(last_updated) > timeout)
+        break;
+    end
         
     SetFwdVelRadiusRoomba(serPort, 0, inf);
 
@@ -89,6 +93,8 @@ while(toc(last_updated) < timeout)
     pos = a{1};
     map = a{2};
     last_updated = a{3};
+    
+    break;
     
     map = plot_grid(map, pos, bf, br, bl, last_updated);
     last_updated = map{2};

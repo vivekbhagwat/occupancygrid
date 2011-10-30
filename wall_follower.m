@@ -21,7 +21,8 @@ else
 end
 
 dd = 0; % total distance traveled, to change strictness of thresh
-thresh = 0.5; % how far away you need to move before returning
+strict = 0.01; % strictness constant
+thresh = 0.1; % how far away you need to move before returning
 
 % Assume we're already touching the object
 
@@ -44,7 +45,7 @@ angle = origin_angle;
 ret = 0; % if we've moved far enough away
 
 BOOL = true; % check if we've touched the line
-while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*0.2 &&...
+while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
         ret == 1)) 
     
     [br,bl, wr,wl,wc, bf] = BumpsWheelDropsSensorsRoomba(serPort);
@@ -56,7 +57,7 @@ while(not(dist([x,y],[origin_x,origin_y]) < thresh+dd*0.2 &&...
     % always turn counter-clockwise
     AngleSensorRoomba(serPort);
     while(bf==1 || br==1 || bl ==1 &&...
-            not(dist([x,y],[origin_x,origin_y]) < thresh+dd*0.2 &&...
+            not(dist([x,y],[origin_x,origin_y]) < thresh+dd*strict &&...
             ret==1))
         if (wr || wl || wc)
             break;
